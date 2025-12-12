@@ -130,13 +130,13 @@ export default function Dashboard() {
             style={{ marginBottom: '2rem' }}
           >
             {stats.map((stat) => (
-              <div key={stat.label} className="card" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <div className={`feature-icon-box ${stat.colorClass}`} style={{ marginBottom: 0 }}>
+              <div key={stat.label} className="stat-card">
+                <div className={`feature-icon-box ${stat.colorClass}`} style={{ marginBottom: 0, width: 48, height: 48 }}>
                   <stat.icon size={24} />
                 </div>
                 <div>
-                  <p style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>{stat.value}</p>
-                  <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{stat.label}</p>
+                  <p className="stat-value">{stat.value}</p>
+                  <p className="stat-label">{stat.label}</p>
                 </div>
               </div>
             ))}
@@ -152,7 +152,7 @@ export default function Dashboard() {
             >
               <div className="item-card">
                 <div className="item-card-header">
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <h3 className="item-card-title">
                     <Package className="text-primary" size={20} /> Your Items
                   </h3>
                 </div>
@@ -166,25 +166,25 @@ export default function Dashboard() {
                       </Link>
                     </div>
                   ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                       {userItems.map((item) => (
-                        <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', background: 'var(--background)', borderRadius: 'var(--radius-md)' }}>
-                          <div style={{ width: '64px', height: '64px', borderRadius: 'var(--radius-sm)', overflow: 'hidden', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div key={item.id} className="item-list-row">
+                          <div className="item-image-box">
                             {item.photos[0] ? (
-                              <img src={item.photos[0]} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              <img src={item.photos[0]} alt={item.name} />
                             ) : (
                               <Package className="text-muted" size={24} />
                             )}
                           </div>
-                          <div style={{ flex: 1 }}>
-                            <h4 style={{ fontWeight: 600 }}>{item.name}</h4>
-                            <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{item.category}</p>
+                          <div className="item-info">
+                            <h4 className="item-name">{item.name}</h4>
+                            <p className="item-meta">{item.category}</p>
                           </div>
-                          <div style={{ display: 'flex', gap: '0.5rem' }}>
-                            <Link to={`/items/${item.id}/edit`} className="btn btn-outline" style={{ padding: '0.5rem' }}>
+                          <div className="item-actions">
+                            <Link to={`/items/${item.id}/edit`} className="action-btn">
                               <Edit size={16} />
                             </Link>
-                            <Link to={`/s/${stickers.find(s => s.itemId === item.id)?.shortCode || ''}`} className="btn btn-outline" style={{ padding: '0.5rem' }}>
+                            <Link to={`/s/${stickers.find(s => s.itemId === item.id)?.shortCode || ''}`} className="action-btn">
                               <Eye size={16} />
                             </Link>
                           </div>
@@ -204,7 +204,7 @@ export default function Dashboard() {
             >
               <div className="item-card">
                 <div className="item-card-header">
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <h3 className="item-card-title">
                     <QrCode className="text-accent" size={20} /> Your QR Stickers
                   </h3>
                 </div>
@@ -218,7 +218,7 @@ export default function Dashboard() {
                       </button>
                     </div>
                   ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                       {userStickers.map((sticker) => {
                         const item = getItemForSticker(sticker.id);
                         const scanCount = getScansBySticker(sticker.id).length;
@@ -227,15 +227,15 @@ export default function Dashboard() {
                           <div
                             key={sticker.id}
                             onClick={() => setSelectedSticker(sticker)}
-                            style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', background: 'var(--background)', borderRadius: 'var(--radius-md)', cursor: 'pointer', transition: 'background 0.2s' }}
-                            className="hover:bg-gray-100"
+                            className="item-list-row"
+                            style={{ cursor: 'pointer' }}
                           >
-                            <div style={{ background: 'white', padding: '0.5rem', borderRadius: 'var(--radius-sm)' }}>
-                              <QRCodeSVG value={`${window.location.origin}/s/${sticker.shortCode}`} size={48} />
+                            <div className="item-image-box" style={{ background: 'white', padding: '4px' }}>
+                              <QRCodeSVG value={`${window.location.origin}/s/${sticker.shortCode}`} size={100} style={{ width: '100%', height: '100%' }} />
                             </div>
-                            <div style={{ flex: 1 }}>
+                            <div className="item-info">
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                <h4 style={{ fontFamily: 'monospace', fontWeight: 600 }}>{sticker.shortCode}</h4>
+                                <h4 className="item-name" style={{ fontFamily: 'monospace' }}>{sticker.shortCode}</h4>
                                 <span style={{
                                   fontSize: '0.75rem',
                                   padding: '2px 8px',
@@ -247,7 +247,7 @@ export default function Dashboard() {
                                   {sticker.status}
                                 </span>
                               </div>
-                              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                              <p className="item-meta">
                                 {item ? item.name : "Not linked to item"}
                               </p>
                             </div>
@@ -269,11 +269,15 @@ export default function Dashboard() {
 
       {/* Custom Modal for Sticker Details */}
       {selectedSticker && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div style={{ background: 'var(--surface)', padding: '2rem', borderRadius: 'var(--radius-lg)', maxWidth: '400px', width: '100%', position: 'relative' }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(4px)' }}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            style={{ background: 'var(--surface)', padding: '2rem', borderRadius: 'var(--radius-lg)', maxWidth: '400px', width: '100%', position: 'relative', boxShadow: 'var(--shadow-xl)', border: '1px solid var(--border)' }}
+          >
             <button
               onClick={() => setSelectedSticker(null)}
-              style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', cursor: 'pointer' }}
+              style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
             >
               <X size={20} />
             </button>
@@ -306,7 +310,7 @@ export default function Dashboard() {
                 </Link>
               )}
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
     </div>
