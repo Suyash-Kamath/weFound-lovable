@@ -106,3 +106,17 @@ body{margin:0;font-family:Outfit,system-ui,-apple-system,Segoe UI,Roboto,'Helvet
 .footer-bottom{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:18px;margin-top:18px}
 .footer-links a{margin-left:12px;text-decoration:none;color:var(--muted)}
 
+/* Button utility classes for legacy UI components */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:8px;padding:8px 12px;font-weight:600;border:none;cursor:pointer;text-decoration:none}
+.btn-default{background:#f3f7f7;color:var(--text)}
+.btn-outline{background:transparent;border:1px solid var(--primary);color:var(--primary)}
+.btn-hero{background:linear-gradient(90deg,var(--primary),#1fc8b6);color:#fff;padding:14px 22px;border-radius:10px}
+.btn-ghost{background:transparent;color:var(--text)}
+.btn-link{background:transparent;color:var(--primary);text-decoration:underline;padding:0}
+.btn-sm{padding:6px 10px;font-size:13px}
+.btn-md{padding:8px 12px;font-size:14px}
+.btn-lg{padding:12px 18px;font-size:16px}
+.btn-xl{padding:14px 22px;font-size:18px}
+.btn-icon{padding:8px;width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center}
+
+
