@@ -1,12 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useAuthStore } from "@/stores/authStore";
 import { useToast } from "@/hooks/use-toast";
-import { QrCode, Mail, Lock, User, ArrowLeft, Loader2 } from "lucide-react";
+import { QrCode, Mail, Lock, User, ArrowLeft, Loader2, Check } from "lucide-react";
 
 export default function Auth() {
   const [searchParams] = useSearchParams();
@@ -15,7 +12,7 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  
+
   const { login, register, isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -87,172 +84,151 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen gradient-hero flex">
+    <div className="auth-container">
       {/* Left side - branding */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
-        <div className="absolute inset-0 gradient-primary opacity-90" />
-        <div className="absolute top-10 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
-        
-        <div className="relative z-10 flex flex-col justify-center p-12 text-primary-foreground">
-          <Link to="/" className="flex items-center gap-2 mb-12">
-            <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
-              <QrCode className="w-6 h-6" />
-            </div>
-            <span className="text-2xl font-bold">LostFoundQR</span>
-          </Link>
+      <div className="auth-left">
+        <Link to="/" className="auth-brand">
+          <div style={{ background: 'rgba(255,255,255,0.2)', padding: '8px', borderRadius: '8px', display: 'flex' }}>
+            <QrCode size={24} />
+          </div>
+          <span>LostFoundQR</span>
+        </Link>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Protect What
-            <br />
-            Matters Most
-          </h1>
-          <p className="text-xl opacity-90 max-w-md">
-            Smart QR stickers that help reunite lost items with their owners. 
-            Simple, secure, and effective.
-          </p>
+        <h1 style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '1.5rem', lineHeight: 1.1 }}>
+          Protect What
+          <br />
+          Matters Most
+        </h1>
+        <p style={{ fontSize: '1.25rem', opacity: 0.9, maxWidth: '400px', lineHeight: 1.6 }}>
+          Smart QR stickers that help reunite lost items with their owners.
+          Simple, secure, and effective.
+        </p>
 
-          <div className="mt-12 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                <span className="text-sm font-bold">✓</span>
-              </div>
-              <span>Dynamic QR codes you can reassign anytime</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                <span className="text-sm font-bold">✓</span>
-              </div>
-              <span>Privacy-protected contact options</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                <span className="text-sm font-bold">✓</span>
-              </div>
-              <span>Real-time scan notifications</span>
-            </div>
+        <div className="auth-feature-list">
+          <div className="auth-feature-item">
+            <div className="check-circle"><Check size={14} /></div>
+            <span>Dynamic QR codes you can reassign anytime</span>
+          </div>
+          <div className="auth-feature-item">
+            <div className="check-circle"><Check size={14} /></div>
+            <span>Privacy-protected contact options</span>
+          </div>
+          <div className="auth-feature-item">
+            <div className="check-circle"><Check size={14} /></div>
+            <span>Real-time scan notifications</span>
           </div>
         </div>
       </div>
 
       {/* Right side - form */}
-      <div className="w-full lg:w-1/2 flex flex-col">
-        <div className="p-6">
-          <Button variant="ghost" asChild>
-            <Link to="/">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
-            </Link>
-          </Button>
+      <div className="auth-right">
+        <div style={{ marginBottom: '2rem' }}>
+          <Link to="/" className="btn btn-outline" style={{ border: 'none', paddingLeft: 0, display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+            <ArrowLeft size={16} />
+            Back to Home
+          </Link>
         </div>
 
-        <div className="flex-1 flex items-center justify-center p-8">
-          <motion.div
-            className="w-full max-w-md"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="lg:hidden flex items-center gap-2 mb-8 justify-center">
-              <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-                <QrCode className="w-5 h-5 text-primary-foreground" />
+        <motion.div
+          className="auth-card"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <div className="nav-logo-icon" style={{ width: 48, height: 48, margin: '0 auto 1rem' }}>
+              <QrCode size={24} />
+            </div>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+              {isLogin ? "Welcome back" : "Create account"}
+            </h2>
+            <p style={{ color: 'var(--text-muted)' }}>
+              {isLogin
+                ? "Sign in to manage your items"
+                : "Start protecting your valuables today"}
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            {!isLogin && (
+              <div className="form-group">
+                <label className="form-label" htmlFor="name">Full Name</label>
+                <div style={{ position: 'relative' }}>
+                  <User size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                  <input
+                    id="name"
+                    type="text"
+                    placeholder="John Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="form-input"
+                    style={{ paddingLeft: '2.5rem' }}
+                    required={!isLogin}
+                  />
+                </div>
               </div>
-              <span className="text-xl font-bold">LostFoundQR</span>
+            )}
+
+            <div className="form-group">
+              <label className="form-label" htmlFor="email">Email</label>
+              <div style={{ position: 'relative' }}>
+                <Mail size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="form-input"
+                  style={{ paddingLeft: '2.5rem' }}
+                  required
+                />
+              </div>
             </div>
 
-            <div className="bg-card rounded-2xl p-8 shadow-xl border border-border">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold mb-2">
-                  {isLogin ? "Welcome back" : "Create account"}
-                </h2>
-                <p className="text-muted-foreground">
-                  {isLogin
-                    ? "Sign in to manage your items"
-                    : "Start protecting your valuables today"}
-                </p>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {!isLogin && (
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                      <Input
-                        id="name"
-                        type="text"
-                        placeholder="John Doe"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="pl-10"
-                        required={!isLogin}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="you@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="pl-10"
-                      required
-                      minLength={6}
-                    />
-                  </div>
-                </div>
-
-                <Button type="submit" className="w-full" size="lg" disabled={loading}>
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      {isLogin ? "Signing in..." : "Creating account..."}
-                    </>
-                  ) : isLogin ? (
-                    "Sign In"
-                  ) : (
-                    "Create Account"
-                  )}
-                </Button>
-              </form>
-
-              <div className="mt-6 text-center">
-                <p className="text-sm text-muted-foreground">
-                  {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-                  <button
-                    type="button"
-                    onClick={() => setIsLogin(!isLogin)}
-                    className="text-primary font-medium hover:underline"
-                  >
-                    {isLogin ? "Sign up" : "Sign in"}
-                  </button>
-                </p>
+            <div className="form-group">
+              <label className="form-label" htmlFor="password">Password</label>
+              <div style={{ position: 'relative' }}>
+                <Lock size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                <input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="form-input"
+                  style={{ paddingLeft: '2.5rem' }}
+                  required
+                  minLength={6}
+                />
               </div>
             </div>
-          </motion.div>
-        </div>
+
+            <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }} disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader2 className="animate-spin" size={16} style={{ marginRight: '8px' }} />
+                  {isLogin ? "Signing in..." : "Creating account..."}
+                </>
+              ) : isLogin ? (
+                "Sign In"
+              ) : (
+                "Create Account"
+              )}
+            </button>
+          </form>
+
+          <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+            {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+            <button
+              type="button"
+              onClick={() => setIsLogin(!isLogin)}
+              style={{ color: 'var(--primary)', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
+            >
+              {isLogin ? "Sign up" : "Sign in"}
+            </button>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

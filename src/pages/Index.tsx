@@ -7,10 +7,9 @@ import { CTASection } from "@/components/landing/CTASection";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="page-wrapper">
       <Navbar />
-      {/* add top padding so fixed navbar doesn't overlap content */}
-      <main className="flex-1 pt-20">
+      <main className="main-content">
         <HeroSection />
         <FeaturesSection />
         <HowItWorksSection />

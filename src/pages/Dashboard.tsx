@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/layout/Navbar";
 import { useAuthStore } from "@/stores/authStore";
 import { useItemStore } from "@/stores/itemStore";
@@ -11,34 +10,17 @@ import {
   QrCode,
   Package,
   Eye,
-  Trash2,
   Edit,
   BarChart3,
-  Settings,
   Copy,
+  X
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
 
 export default function Dashboard() {
   const { user, isAuthenticated } = useAuthStore();
-  const { items, stickers, scans, generateSticker, getScansBySticker } = useItemStore();
+  const { items, stickers, generateSticker, getScansBySticker } = useItemStore();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [selectedSticker, setSelectedSticker] = useState<Sticker | null>(null);
@@ -84,292 +66,249 @@ export default function Dashboard() {
       label: "Active Items",
       value: userItems.length,
       icon: Package,
-      color: "text-primary",
-      bg: "bg-primary/10",
+      colorClass: "icon-primary",
     },
     {
       label: "QR Stickers",
       value: userStickers.length,
       icon: QrCode,
-      color: "text-accent",
-      bg: "bg-accent/10",
+      colorClass: "icon-amber",
     },
     {
       label: "Total Scans",
       value: totalScans,
       icon: Eye,
-      color: "text-green-500",
-      bg: "bg-green-500/10",
+      colorClass: "icon-green",
     },
     {
       label: "Recovery Rate",
       value: "100%",
       icon: BarChart3,
-      color: "text-purple-500",
-      bg: "bg-purple-500/10",
+      colorClass: "icon-purple",
     },
   ];
 
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="dashboard-layout">
       <Navbar />
-      
-      <main className="container mx-auto px-4 pt-24 pb-12">
-        {/* Header */}
-        <motion.div
-          className="mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <h1 className="text-3xl font-bold mb-2">
-            Welcome back, <span className="text-gradient">{user.name}</span>
-          </h1>
-          <p className="text-muted-foreground">
-            Manage your items and QR stickers from your dashboard.
-          </p>
-        </motion.div>
 
-        {/* Stats */}
-        <motion.div
-          className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          {stats.map((stat) => (
-            <Card key={stat.label} className="border-border">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-xl ${stat.bg} flex items-center justify-center`}>
-                    <stat.icon className={`w-6 h-6 ${stat.color}`} />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold">{stat.value}</p>
-                    <p className="text-sm text-muted-foreground">{stat.label}</p>
-                  </div>
+      <main className="dashboard-main">
+        <div className="container">
+          {/* Header */}
+          <motion.div
+            className="dashboard-header"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <div>
+              <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                Welcome back, <span className="text-gradient">{user.name}</span>
+              </h1>
+              <p style={{ color: 'var(--text-muted)' }}>
+                Manage your items and QR stickers from your dashboard.
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <Link to="/items/new" className="btn btn-primary">
+                <Plus size={16} /> Add New Item
+              </Link>
+              <button onClick={handleGenerateSticker} className="btn btn-outline">
+                <QrCode size={16} /> Generate Sticker
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Stats */}
+          <motion.div
+            className="dashboard-grid"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            style={{ marginBottom: '2rem' }}
+          >
+            {stats.map((stat) => (
+              <div key={stat.label} className="card" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div className={`feature-icon-box ${stat.colorClass}`} style={{ marginBottom: 0 }}>
+                  <stat.icon size={24} />
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </motion.div>
+                <div>
+                  <p style={{ fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>{stat.value}</p>
+                  <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{stat.label}</p>
+                </div>
+              </div>
+            ))}
+          </motion.div>
 
-        {/* Actions */}
-        <motion.div
-          className="flex flex-wrap gap-4 mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Button asChild>
-            <Link to="/items/new">
-              <Plus className="w-4 h-4 mr-2" />
-              Add New Item
-            </Link>
-          </Button>
-          <Button variant="outline" onClick={handleGenerateSticker}>
-            <QrCode className="w-4 h-4 mr-2" />
-            Generate Sticker
-          </Button>
-        </motion.div>
-
-        {/* Items & Stickers Grid */}
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Items */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Package className="w-5 h-5 text-primary" />
-                  Your Items
-                </CardTitle>
-                <CardDescription>
-                  Items you've registered with QR stickers
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {userItems.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Package className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p className="mb-4">No items yet. Add your first item!</p>
-                    <Button asChild size="sm">
-                      <Link to="/items/new">
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add Item
+          {/* Items & Stickers Grid */}
+          <div className="dashboard-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
+            {/* Items */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <div className="item-card">
+                <div className="item-card-header">
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <Package className="text-primary" size={20} /> Your Items
+                  </h3>
+                </div>
+                <div className="item-card-body">
+                  {userItems.length === 0 ? (
+                    <div className="empty-state">
+                      <div className="empty-icon"><Package size={32} /></div>
+                      <p style={{ marginBottom: '1rem', color: 'var(--text-muted)' }}>No items yet. Add your first item!</p>
+                      <Link to="/items/new" className="btn btn-primary btn-sm">
+                        <Plus size={16} /> Add Item
                       </Link>
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {userItems.map((item) => (
-                      <div
-                        key={item.id}
-                        className="flex items-center gap-4 p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors"
-                      >
-                        <div className="w-16 h-16 rounded-lg bg-background flex items-center justify-center overflow-hidden">
-                          {item.photos[0] ? (
-                            <img
-                              src={item.photos[0]}
-                              alt={item.name}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <Package className="w-8 h-8 text-muted-foreground" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-medium truncate">{item.name}</h4>
-                          <p className="text-sm text-muted-foreground truncate">
-                            {item.category}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Button variant="ghost" size="icon" asChild>
-                            <Link to={`/items/${item.id}/edit`}>
-                              <Edit className="w-4 h-4" />
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                      {userItems.map((item) => (
+                        <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', background: 'var(--background)', borderRadius: 'var(--radius-md)' }}>
+                          <div style={{ width: '64px', height: '64px', borderRadius: 'var(--radius-sm)', overflow: 'hidden', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            {item.photos[0] ? (
+                              <img src={item.photos[0]} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            ) : (
+                              <Package className="text-muted" size={24} />
+                            )}
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <h4 style={{ fontWeight: 600 }}>{item.name}</h4>
+                            <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{item.category}</p>
+                          </div>
+                          <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <Link to={`/items/${item.id}/edit`} className="btn btn-outline" style={{ padding: '0.5rem' }}>
+                              <Edit size={16} />
                             </Link>
-                          </Button>
-                          <Button variant="ghost" size="icon" asChild>
-                            <Link to={`/s/${stickers.find(s => s.itemId === item.id)?.shortCode || ''}`}>
-                              <Eye className="w-4 h-4" />
+                            <Link to={`/s/${stickers.find(s => s.itemId === item.id)?.shortCode || ''}`} className="btn btn-outline" style={{ padding: '0.5rem' }}>
+                              <Eye size={16} />
                             </Link>
-                          </Button>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
 
-          {/* Stickers */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <QrCode className="w-5 h-5 text-accent" />
-                  Your QR Stickers
-                </CardTitle>
-                <CardDescription>
-                  Manage and view your QR codes
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {userStickers.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <QrCode className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p className="mb-4">No stickers yet. Generate your first one!</p>
-                    <Button size="sm" onClick={handleGenerateSticker}>
-                      <QrCode className="w-4 h-4 mr-2" />
-                      Generate Sticker
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {userStickers.map((sticker) => {
-                      const item = getItemForSticker(sticker.id);
-                      const scanCount = getScansBySticker(sticker.id).length;
-                      
-                      return (
-                        <Dialog key={sticker.id}>
-                          <DialogTrigger asChild>
-                            <div className="flex items-center gap-4 p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors cursor-pointer">
-                              <div className="w-16 h-16 rounded-lg bg-background p-2">
-                                <QRCodeSVG
-                                  value={`${window.location.origin}/s/${sticker.shortCode}`}
-                                  size={48}
-                                  level="M"
-                                />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2">
-                                  <h4 className="font-mono font-medium">
-                                    {sticker.shortCode}
-                                  </h4>
-                                  <Badge
-                                    variant={
-                                      sticker.status === "active"
-                                        ? "default"
-                                        : sticker.status === "pending"
-                                        ? "secondary"
-                                        : "destructive"
-                                    }
-                                  >
-                                    {sticker.status}
-                                  </Badge>
-                                </div>
-                                <p className="text-sm text-muted-foreground">
-                                  {item ? item.name : "Not linked to item"}
-                                </p>
-                              </div>
-                              <div className="text-right">
-                                <p className="text-lg font-semibold">{scanCount}</p>
-                                <p className="text-xs text-muted-foreground">scans</p>
-                              </div>
+            {/* Stickers */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <div className="item-card">
+                <div className="item-card-header">
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <QrCode className="text-accent" size={20} /> Your QR Stickers
+                  </h3>
+                </div>
+                <div className="item-card-body">
+                  {userStickers.length === 0 ? (
+                    <div className="empty-state">
+                      <div className="empty-icon"><QrCode size={32} /></div>
+                      <p style={{ marginBottom: '1rem', color: 'var(--text-muted)' }}>No stickers yet. Generate your first one!</p>
+                      <button onClick={handleGenerateSticker} className="btn btn-outline btn-sm">
+                        <QrCode size={16} /> Generate Sticker
+                      </button>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                      {userStickers.map((sticker) => {
+                        const item = getItemForSticker(sticker.id);
+                        const scanCount = getScansBySticker(sticker.id).length;
+
+                        return (
+                          <div
+                            key={sticker.id}
+                            onClick={() => setSelectedSticker(sticker)}
+                            style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', background: 'var(--background)', borderRadius: 'var(--radius-md)', cursor: 'pointer', transition: 'background 0.2s' }}
+                            className="hover:bg-gray-100"
+                          >
+                            <div style={{ background: 'white', padding: '0.5rem', borderRadius: 'var(--radius-sm)' }}>
+                              <QRCodeSVG value={`${window.location.origin}/s/${sticker.shortCode}`} size={48} />
                             </div>
-                          </DialogTrigger>
-                          <DialogContent className="sm:max-w-md">
-                            <DialogHeader>
-                              <DialogTitle>QR Code: {sticker.shortCode}</DialogTitle>
-                              <DialogDescription>
-                                {item ? `Linked to ${item.name}` : "Not linked to any item"}
-                              </DialogDescription>
-                            </DialogHeader>
-                            <div className="flex flex-col items-center py-6">
-                              <div className="bg-white p-6 rounded-2xl shadow-lg mb-6">
-                                <QRCodeSVG
-                                  value={`${window.location.origin}/s/${sticker.shortCode}`}
-                                  size={200}
-                                  level="H"
-                                  includeMargin
-                                />
+                            <div style={{ flex: 1 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <h4 style={{ fontFamily: 'monospace', fontWeight: 600 }}>{sticker.shortCode}</h4>
+                                <span style={{
+                                  fontSize: '0.75rem',
+                                  padding: '2px 8px',
+                                  borderRadius: '999px',
+                                  background: sticker.status === 'active' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(107, 114, 128, 0.1)',
+                                  color: sticker.status === 'active' ? '#059669' : '#374151',
+                                  fontWeight: 600
+                                }}>
+                                  {sticker.status}
+                                </span>
                               </div>
-                              <p className="text-sm text-muted-foreground mb-4">
-                                {window.location.origin}/s/{sticker.shortCode}
+                              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                                {item ? item.name : "Not linked to item"}
                               </p>
-                              <div className="flex gap-2">
-                                <Button
-                                  variant="outline"
-                                  onClick={() =>
-                                    copyToClipboard(
-                                      `${window.location.origin}/s/${sticker.shortCode}`
-                                    )
-                                  }
-                                >
-                                  <Copy className="w-4 h-4 mr-2" />
-                                  Copy Link
-                                </Button>
-                                {!item && (
-                                  <Button asChild>
-                                    <Link to={`/items/new?sticker=${sticker.id}`}>
-                                      <Plus className="w-4 h-4 mr-2" />
-                                      Link Item
-                                    </Link>
-                                  </Button>
-                                )}
-                              </div>
                             </div>
-                          </DialogContent>
-                        </Dialog>
-                      );
-                    })}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
+                            <div style={{ textAlign: 'right' }}>
+                              <p style={{ fontWeight: 600, fontSize: '1.125rem' }}>{scanCount}</p>
+                              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>scans</p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </main>
+
+      {/* Custom Modal for Sticker Details */}
+      {selectedSticker && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div style={{ background: 'var(--surface)', padding: '2rem', borderRadius: 'var(--radius-lg)', maxWidth: '400px', width: '100%', position: 'relative' }}>
+            <button
+              onClick={() => setSelectedSticker(null)}
+              style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', cursor: 'pointer' }}
+            >
+              <X size={20} />
+            </button>
+
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>QR Code: {selectedSticker.shortCode}</h3>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+              {getItemForSticker(selectedSticker.id) ? `Linked to ${getItemForSticker(selectedSticker.id)?.name}` : "Not linked to any item"}
+            </p>
+
+            <div style={{ background: 'white', padding: '1.5rem', borderRadius: 'var(--radius-lg)', display: 'flex', justifyContent: 'center', marginBottom: '1.5rem', boxShadow: 'var(--shadow-md)' }}>
+              <QRCodeSVG
+                value={`${window.location.origin}/s/${selectedSticker.shortCode}`}
+                size={200}
+                level="H"
+                includeMargin
+              />
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button
+                className="btn btn-outline"
+                style={{ flex: 1 }}
+                onClick={() => copyToClipboard(`${window.location.origin}/s/${selectedSticker.shortCode}`)}
+              >
+                <Copy size={16} /> Copy Link
+              </button>
+              {!getItemForSticker(selectedSticker.id) && (
+                <Link to={`/items/new?sticker=${selectedSticker.id}`} className="btn btn-primary" style={{ flex: 1 }}>
+                  <Plus size={16} /> Link Item
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

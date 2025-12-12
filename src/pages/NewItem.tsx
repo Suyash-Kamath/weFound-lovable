@@ -1,19 +1,12 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Navbar } from "@/components/layout/Navbar";
 import { useAuthStore } from "@/stores/authStore";
 import { useItemStore } from "@/stores/itemStore";
 import { ITEM_CATEGORIES, ContactOptions } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Save, Package } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function NewItem() {
   const [searchParams] = useSearchParams();
@@ -71,74 +64,111 @@ export default function NewItem() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="dashboard-layout">
       <Navbar />
-      <main className="container mx-auto px-4 pt-24 pb-12 max-w-2xl">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <Button variant="ghost" asChild className="mb-6">
-            <Link to="/dashboard"><ArrowLeft className="w-4 h-4 mr-2" />Back to Dashboard</Link>
-          </Button>
+      <main className="dashboard-main">
+        <div className="container" style={{ maxWidth: '800px' }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <Link to="/dashboard" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '1.5rem' }}>
+              <ArrowLeft size={16} /> Back to Dashboard
+            </Link>
 
-          <div className="flex items-center gap-4 mb-8">
-            <div className="w-14 h-14 rounded-2xl gradient-primary flex items-center justify-center">
-              <Package className="w-7 h-7 text-primary-foreground" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+              <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'linear-gradient(135deg, var(--primary), #2dd4bf)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
+                <Package size={28} />
+              </div>
+              <div>
+                <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>Add New Item</h1>
+                <p style={{ color: 'var(--text-muted)' }}>Register an item with a QR sticker</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold">Add New Item</h1>
-              <p className="text-muted-foreground">Register an item with a QR sticker</p>
-            </div>
-          </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <Card>
-              <CardHeader><CardTitle>Item Details</CardTitle></CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Item Name *</Label>
-                  <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. MacBook Pro" required />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="category">Category *</Label>
-                  <Select value={category} onValueChange={setCategory} required>
-                    <SelectTrigger><SelectValue placeholder="Select category" /></SelectTrigger>
-                    <SelectContent>
-                      {ITEM_CATEGORIES.map((cat) => (<SelectItem key={cat} value={cat}>{cat}</SelectItem>))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Add any identifying details..." />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="value">Estimated Value ($)</Label>
-                  <Input id="value" type="number" value={estimatedValue} onChange={(e) => setEstimatedValue(e.target.value)} placeholder="0.00" />
-                </div>
-              </CardContent>
-            </Card>
+            <form onSubmit={handleSubmit}>
+              <div className="card" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>Item Details</h3>
 
-            <Card>
-              <CardHeader><CardTitle>Contact Options</CardTitle></CardHeader>
-              <CardContent className="space-y-4">
-                {[
-                  { key: "showWhatsApp", label: "WhatsApp" },
-                  { key: "showCall", label: "Phone Call" },
-                  { key: "showEmail", label: "Email" },
-                  { key: "showInAppChat", label: "In-App Chat" },
-                ].map((opt) => (
-                  <div key={opt.key} className="flex items-center justify-between">
-                    <Label>{opt.label}</Label>
-                    <Switch checked={contactOptions[opt.key as keyof ContactOptions] as boolean} onCheckedChange={(v) => setContactOptions({ ...contactOptions, [opt.key]: v })} />
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="name">Item Name *</label>
+                  <input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. MacBook Pro" className="form-input" required />
+                </div>
 
-            <Button type="submit" size="lg" className="w-full">
-              <Save className="w-4 h-4 mr-2" />Create Item & Generate QR
-            </Button>
-          </form>
-        </motion.div>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="category">Category *</label>
+                  <select
+                    id="category"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="form-input"
+                    required
+                    style={{ appearance: 'none', backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'/%3e%3c/svg%3e")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1em' }}
+                  >
+                    <option value="" disabled>Select category</option>
+                    {ITEM_CATEGORIES.map((cat) => (<option key={cat} value={cat}>{cat}</option>))}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label" htmlFor="description">Description</label>
+                  <textarea
+                    id="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Add any identifying details..."
+                    className="form-input"
+                    style={{ minHeight: '100px', resize: 'vertical' }}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label" htmlFor="value">Estimated Value ($)</label>
+                  <input id="value" type="number" value={estimatedValue} onChange={(e) => setEstimatedValue(e.target.value)} placeholder="0.00" className="form-input" />
+                </div>
+              </div>
+
+              <div className="card" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>Contact Options</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {[
+                    { key: "showWhatsApp", label: "WhatsApp" },
+                    { key: "showCall", label: "Phone Call" },
+                    { key: "showEmail", label: "Email" },
+                    { key: "showInAppChat", label: "In-App Chat" },
+                  ].map((opt) => (
+                    <div key={opt.key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.5rem 0' }}>
+                      <label htmlFor={opt.key} style={{ fontWeight: 500 }}>{opt.label}</label>
+                      <div style={{ position: 'relative', width: '44px', height: '24px' }}>
+                        <input
+                          type="checkbox"
+                          id={opt.key}
+                          checked={contactOptions[opt.key as keyof ContactOptions] as boolean}
+                          onChange={(e) => setContactOptions({ ...contactOptions, [opt.key]: e.target.checked })}
+                          style={{ opacity: 0, width: 0, height: 0 }}
+                        />
+                        <span
+                          style={{
+                            position: 'absolute', cursor: 'pointer', top: 0, left: 0, right: 0, bottom: 0,
+                            backgroundColor: contactOptions[opt.key as keyof ContactOptions] ? 'var(--primary)' : '#ccc',
+                            transition: '.4s', borderRadius: '34px'
+                          }}
+                        >
+                          <span style={{
+                            position: 'absolute', content: '""', height: '20px', width: '20px', left: '2px', bottom: '2px',
+                            backgroundColor: 'white', transition: '.4s', borderRadius: '50%',
+                            transform: contactOptions[opt.key as keyof ContactOptions] ? 'translateX(20px)' : 'translateX(0)'
+                          }} />
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button type="submit" className="btn btn-primary" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                <Save size={16} /> Create Item & Generate QR
+              </button>
+            </form>
+          </motion.div>
+        </div>
       </main>
     </div>
   );

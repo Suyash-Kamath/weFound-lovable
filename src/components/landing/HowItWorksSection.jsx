@@ -31,16 +31,16 @@ const steps = [
 export function HowItWorksSection() {
   return (
     <section className="how-section">
-      <div className="site-container">
+      <div className="container">
         <motion.div 
-          className="how-intro"
+          className="section-header"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="how-title">How It <span>Works</span></h2>
-          <p className="how-lead">Four simple steps to protect your valuables and recover them when lost.</p>
+          <h2 className="section-title">How It <span className="text-gradient">Works</span></h2>
+          <p className="section-subtitle">Four simple steps to protect your valuables and recover them when lost.</p>
         </motion.div>
 
         <div className="how-grid">
@@ -53,9 +53,9 @@ export function HowItWorksSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.15 }}
             >
-              <div className="how-badge">
-                <div className="how-icon"><step.icon /></div>
-                <div className="how-stepnum">{step.step}</div>
+              <div className="how-icon-wrapper">
+                <step.icon size={32} />
+                <div className="how-step-number">{step.step}</div>
               </div>
 
               <h3 className="how-step-title">{step.title}</h3>

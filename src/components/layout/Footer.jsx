@@ -3,13 +3,15 @@ import { QrCode, Mail, Phone, MapPin } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="site-footer">
-      <div className="site-container footer-inner">
+    <footer className="footer">
+      <div className="container">
         <div className="footer-grid">
           <div className="footer-brand">
             <Link to="/" className="brand-link">
-              <div className="logo-badge small"><QrCode /></div>
-              <span className="brand-name">Lost<span className="brand-accent">Found</span>QR</span>
+              <div className="nav-logo-icon" style={{ width: 32, height: 32 }}>
+                <QrCode size={18} />
+              </div>
+              <span>Lost<span className="text-gradient">Found</span>QR</span>
             </Link>
             <p className="brand-desc">Smart QR stickers that help reunite lost items with their owners. Simple, secure, and effective.</p>
           </div>
@@ -46,7 +48,10 @@ export function Footer() {
 
         <div className="footer-bottom">
           <p>© {new Date().getFullYear()} LostFoundQR. All rights reserved.</p>
-          <div className="footer-links"><Link to="/privacy">Privacy Policy</Link><Link to="/terms">Terms of Service</Link></div>
+          <div className="footer-links">
+            <Link to="/privacy">Privacy Policy</Link>
+            <Link to="/terms">Terms of Service</Link>
+          </div>
         </div>
       </div>
     </footer>
