@@ -3,7 +3,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@/lib/utils";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "default" | "outline" | "hero" | "ghost" | "link";
+  variant?: "default" | "outline" | "hero" | "ghost" | "link" | "accent" | "destructive";
   size?: "default" | "sm" | "lg" | "xl" | "icon";
   asChild?: boolean;
 }
@@ -14,6 +14,8 @@ const variantMap: Record<string, string> = {
   hero: "btn-hero",
   ghost: "btn-ghost",
   link: "btn-link",
+  accent: "btn-accent",
+  destructive: "btn-destructive",
 };
 
 const sizeMap: Record<string, string> = {
@@ -33,3 +35,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, va
 Button.displayName = "Button";
 
 export { Button };
+
+// compatibility helper for components that previously used `buttonVariants` (CVA)
+export function buttonVariants(opts?: { variant?: string; size?: string; className?: string }) {
+  const { variant = "default", size = "default", className = "" } = opts || {};
+  return cn("btn", variantMap[variant] || variantMap.default, sizeMap[size] || sizeMap.default, className);
+}
+
+// ButtonProps already exported above as interface
