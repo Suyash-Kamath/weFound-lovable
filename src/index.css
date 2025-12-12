@@ -6,8 +6,7 @@
 @import "@fontsource/outfit/600.css";
 @import "@fontsource/outfit/700.css";
 
-@layer base {
-  :root {
+:root {
     --background: 210 20% 98%;
     --foreground: 220 25% 10%;
 
@@ -102,23 +101,26 @@
     --sidebar-border: 220 20% 18%;
     --sidebar-ring: 174 72% 45%;
   }
-}
 
-@layer base {
   * {
-    @apply border-border;
+    /* set default border color via CSS variable instead of Tailwind `@apply` to avoid unknown-utility error */
+    border-color: hsl(var(--border));
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: Outfit, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-tight;
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
-}
 
-@layer utilities {
+/* utilities */
   .gradient-primary {
     background: var(--gradient-primary);
   }
@@ -145,4 +147,3 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-}
