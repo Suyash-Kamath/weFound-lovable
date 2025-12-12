@@ -21,70 +21,39 @@ export function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center group-hover:shadow-glow transition-shadow">
-            <QrCode className="w-5 h-5 text-primary-foreground" />
+    <nav className="site-navbar">
+      <div className="site-container">
+        <Link to="/" className="site-logo">
+          <div className="logo-badge">
+            <QrCode />
           </div>
-          <span className="text-xl font-bold">
-            Lost<span className="text-gradient">Found</span>QR
-          </span>
+          <span className="site-title">Lost<span className="site-title-accent">Found</span>QR</span>
         </Link>
 
-        <div className="flex items-center gap-4">
+        <div className="nav-actions">
           {isAuthenticated ? (
             <>
-              <Button variant="ghost" asChild>
-                <Link to="/dashboard">
-                  <LayoutDashboard className="w-4 h-4 mr-2" />
-                  Dashboard
-                </Link>
-              </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                    <Avatar className="h-10 w-10">
-                      <AvatarFallback className="bg-primary text-primary-foreground">
-                        {user?.name?.charAt(0).toUpperCase() || "U"}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <div className="flex flex-col space-y-1 p-2">
-                    <p className="text-sm font-medium">{user?.name}</p>
-                    <p className="text-xs text-muted-foreground">{user?.email}</p>
+              <a href="/dashboard" className="nav-link">Dashboard</a>
+
+              <div className="avatar-button">
+                <div className="avatar-fallback">{user?.name?.charAt(0).toUpperCase() || 'U'}</div>
+              </div>
+              <div className="dropdown-menu">
+                <div className="dropdown-content">
+                  <div className="dropdown-user">
+                    <p className="user-name">{user?.name}</p>
+                    <p className="user-email">{user?.email}</p>
                   </div>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to="/profile" className="cursor-pointer">
-                      <User className="mr-2 h-4 w-4" />
-                      Profile
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard" className="cursor-pointer">
-                      <LayoutDashboard className="mr-2 h-4 w-4" />
-                      Dashboard
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Log out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                  <a href="/profile" className="dropdown-item">Profile</a>
+                  <a href="/dashboard" className="dropdown-item">Dashboard</a>
+                  <button onClick={handleLogout} className="dropdown-item destructive">Log out</button>
+                </div>
+              </div>
             </>
           ) : (
             <>
-              <Button variant="ghost" asChild>
-                <Link to="/auth">Sign In</Link>
-              </Button>
-              <Button asChild>
-                <Link to="/auth?mode=register">Get Started</Link>
-              </Button>
+              <a href="/auth" className="nav-link">Sign In</a>
+              <a href="/auth?mode=register" className="btn-primary">Get Started</a>
             </>
           )}
         </div>

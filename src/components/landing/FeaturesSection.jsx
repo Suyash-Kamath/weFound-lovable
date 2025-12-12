@@ -63,40 +63,34 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section className="py-24 bg-background">
-      <div className="container mx-auto px-4">
+    <section className="features-section">
+      <div className="site-container">
         <motion.div 
-          className="text-center max-w-3xl mx-auto mb-16"
+          className="features-intro"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Everything You Need to
-            <br />
-            <span className="text-gradient">Protect Your Belongings</span>
-          </h2>
-          <p className="text-xl text-muted-foreground">
-            Our comprehensive platform makes it easy to tag, track, and recover your valuables.
-          </p>
+          <h2 className="features-title">Everything You Need to<br /><span>Protect Your Belongings</span></h2>
+          <p className="features-lead">Our comprehensive platform makes it easy to tag, track, and recover your valuables.</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="features-grid">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
-              className="group p-6 rounded-2xl bg-card border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300"
+              className="feature-card"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <div className={`w-12 h-12 rounded-xl ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                <feature.icon className="w-6 h-6" />
+              <div className={`feature-icon ${feature.color}`}>
+                <feature.icon />
               </div>
-              <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
-              <p className="text-muted-foreground text-sm">{feature.description}</p>
+              <h3 className="feature-title">{feature.title}</h3>
+              <p className="feature-desc">{feature.description}</p>
             </motion.div>
           ))}
         </div>
