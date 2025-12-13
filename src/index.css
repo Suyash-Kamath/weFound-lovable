@@ -1286,3 +1286,82 @@ h6 {
   color: var(--text-muted);
   box-shadow: var(--shadow-sm);
 }
+
+/* --- NOT FOUND PAGE STYLES --- */
+
+/* Full-screen wrapper using the existing flex-center utility */
+.not-found-wrapper {
+  /* min-height: 100vh; is often better applied to body/html or a root element */
+  min-height: 100vh;
+  background-color: var(--background);
+  padding: var(--spacing-xl);
+}
+
+/* The central card container */
+.not-found-card {
+  text-align: center;
+  max-width: 550px;
+  width: 100%;
+  padding: var(--spacing-2xl);
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Pseudo-element for a subtle background highlight */
+.not-found-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--primary), #2dd4bf);
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+}
+
+/* The massive 404 code */
+.not-found-code {
+  font-size: 8rem; /* Large size */
+  font-weight: 800; /* Extra bold */
+  margin-bottom: var(--spacing-md);
+  line-height: 1;
+  /* The 'text-gradient' utility class will handle the color */
+}
+
+@media (min-width: 640px) {
+  .not-found-code {
+    font-size: 10rem;
+  }
+}
+
+/* The main message (e.g., Oops! Looks like you're lost.) */
+.not-found-message {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: var(--spacing-md);
+}
+
+/* The detailed description */
+.not-found-description {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-xl);
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Style the button (using the existing .btn and .btn-primary utility classes) */
+.not-found-cta {
+  /* No need to re-style the button, just ensuring margin is correct */
+  margin-top: var(--spacing-sm);
+  padding-left: 1.75rem;
+  padding-right: 1.75rem;
+  font-size: 1.1rem;
+}
