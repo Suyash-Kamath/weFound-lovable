@@ -11,7 +11,7 @@ export function Footer() {
               <div className="nav-logo-icon" style={{ width: 32, height: 32 }}>
                 <QrCode size={18} />
               </div>
-              <span>Lost<span className="text-gradient">Found</span>QR</span>
+              <span>we<span className="text-gradient">Found</span></span>
             </Link>
             <p className="brand-desc">Smart QR stickers that help reunite lost items with their owners. Simple, secure, and effective.</p>
           </div>

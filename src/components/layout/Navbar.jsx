@@ -18,7 +18,7 @@ export function Navbar() {
           <div className="nav-logo-icon">
             <QrCode />
           </div>
-          <span>Lost<span className="text-gradient">Found</span>QR</span>
+          <span>we<span className="text-gradient">Found</span></span>
         </Link>
 
         <div className="flex-center" style={{ gap: '1rem' }}>
