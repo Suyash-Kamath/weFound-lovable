@@ -40,8 +40,8 @@ export function Footer() {
             <h4>Contact</h4>
             <ul className="contact-list">
               <li><Mail /> <a href="mailto:support@weFound.com">support@weFound.com</a></li>
-              <li><Phone /> <span>+1 (555) 123-4567</span></li>
-              <li><MapPin /> <span>123 Innovation Street,<br/>Tech City, TC 12345</span></li>
+              <li><Phone /> <span>+91 9999999999</span></li>
+              <li><MapPin /> <span>Mumbai,India</span></li>
             </ul>
           </div>
         </div>
