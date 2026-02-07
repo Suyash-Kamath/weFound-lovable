@@ -61,7 +61,7 @@ export default function Auth() {
         if (success) {
           toast({
             title: "Account created!",
-            description: "Welcome to LostFoundQR.",
+            description: "Welcome to weFound.",
           });
           navigate("/dashboard");
         } else {
@@ -91,7 +91,7 @@ export default function Auth() {
           <div style={{ background: 'rgba(255,255,255,0.2)', padding: '8px', borderRadius: '8px', display: 'flex' }}>
             <QrCode size={24} />
           </div>
-          <span>LostFoundQR</span>
+          <span>weFound</span>
         </Link>
 
         <h1 style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '1.5rem', lineHeight: 1.1 }}>

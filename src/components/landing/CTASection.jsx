@@ -26,7 +26,7 @@ export function CTASection() {
           </h2>
 
           <p className="cta-lead">
-            Join thousands of smart users who protect their belongings with LostFoundQR. Get started in minutes, free forever for up to 3 items.
+            Join thousands of smart users who protect their belongings with weFound. Get started in minutes, free forever for up to 3 items.
           </p>
 
           <div className="cta-actions">

@@ -59,7 +59,7 @@ export function HeroSection() {
               <h3 className="font-bold mb-4">MacBook Pro 14"</h3>
 
               <div className="qr-code-wrapper">
-                <QRCodeSVG value="https://lostfoundqr.com/s/DEMO1234" size={200} level="H" includeMargin />
+                <QRCodeSVG value="https://weFound.com/s/DEMO1234" size={200} level="H" includeMargin />
               </div>
 
               <div className="mt-4">

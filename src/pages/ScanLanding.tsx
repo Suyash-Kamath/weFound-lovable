@@ -111,7 +111,7 @@ export default function ScanLanding() {
           </Card>
 
           <p className="text-center text-xs text-muted-foreground mt-6">
-            Powered by <span className="font-semibold">LostFoundQR</span>
+            Powered by <span className="font-semibold">weFound</span>
           </p>
         </motion.div>
       </div>

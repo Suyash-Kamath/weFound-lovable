@@ -39,7 +39,7 @@ export function Footer() {
           <div className="footer-col">
             <h4>Contact</h4>
             <ul className="contact-list">
-              <li><Mail /> <a href="mailto:support@lostfoundqr.com">support@lostfoundqr.com</a></li>
+              <li><Mail /> <a href="mailto:support@weFound.com">support@weFound.com</a></li>
               <li><Phone /> <span>+1 (555) 123-4567</span></li>
               <li><MapPin /> <span>123 Innovation Street,<br/>Tech City, TC 12345</span></li>
             </ul>
@@ -47,7 +47,7 @@ export function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} LostFoundQR. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} weFound. All rights reserved.</p>
           <div className="footer-links">
             <Link to="/privacy">Privacy Policy</Link>
             <Link to="/terms">Terms of Service</Link>
