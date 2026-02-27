@@ -23,27 +23,32 @@ export function HeroSection() {
           >
             <div className="hero-badge">
               <Zap size={16} />
-              <span>Smart Lost & Found Solution</span>
+              <span>weFound Platform</span>
             </div>
 
             <h1 className="hero-title">
-              Never Lose What
+              Recover Lost Items
               <br />
-              <span className="text-gradient">Matters Most</span>
+              <span className="text-gradient">Faster, Safer, Smarter</span>
             </h1>
 
             <p className="hero-lead">
-              Protect your valuables with dynamic QR stickers. When someone finds your item, they can instantly contact you while your privacy stays protected.
+              Dynamic QR stickers with privacy-first return flows. Give finders a clear way to reach you without exposing personal details.
             </p>
 
             <div className="hero-actions">
               <Link to="/auth?mode=register" className="btn btn-primary">Get Started Free</Link>
-              <Link to="/how-it-works" className="btn btn-outline">See How It Works</Link>
+              <Link to="/dashboard" className="btn btn-outline">See Demo Dashboard</Link>
             </div>
 
             <div className="hero-features">
               <div className="hero-feature-item"><Shield size={18} /> <span>Privacy Protected</span></div>
               <div className="hero-feature-item"><QrCode size={18} /> <span>Dynamic QR Codes</span></div>
+            </div>
+            <div className="hero-pill-row">
+              <span className="hero-pill">Delivery Handoff</span>
+              <span className="hero-pill">Scan Analytics</span>
+              <span className="hero-pill">Bulk QR</span>
             </div>
           </motion.div>
 
@@ -55,15 +60,15 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div className="qr-card-main">
-              <p className="text-muted text-sm mb-2">Sample QR Sticker</p>
-              <h3 className="font-bold mb-4">MacBook Pro 14"</h3>
+              <p className="qr-card-label">Sample QR Sticker</p>
+              <h3 className="qr-card-title">MacBook Pro 14"</h3>
 
               <div className="qr-code-wrapper">
-                <QRCodeSVG value="https://weFound.com/s/DEMO1234" size={200} level="H" includeMargin />
-              </div>
+              <QRCodeSVG value="https://wefound.com/s/DEMO1234" size={200} level="H" includeMargin />
+            </div>
 
               <div className="mt-4">
-                <p className="text-sm text-muted mb-2">Scan to see finder view</p>
+                <p className="qr-card-caption">Scan to see finder view</p>
                 <div className="status-badge">
                   <span className="status-dot"/>Active
                 </div>

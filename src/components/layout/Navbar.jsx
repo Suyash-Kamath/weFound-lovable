@@ -21,6 +21,12 @@ export function Navbar() {
           <span>we<span className="text-gradient">Found</span></span>
         </Link>
 
+        <div className="nav-links">
+          <Link to="/how-it-works" className="nav-link">How It Works</Link>
+          <Link to="/pricing" className="nav-link">Pricing</Link>
+          <Link to="/enterprise" className="nav-link">Enterprise</Link>
+        </div>
+
         <div className="flex-center" style={{ gap: '1rem' }}>
           {isAuthenticated ? (
             <>

@@ -100,8 +100,8 @@ export default function Auth() {
           Matters Most
         </h1>
         <p style={{ fontSize: '1.25rem', opacity: 0.9, maxWidth: '400px', lineHeight: 1.6 }}>
-          Smart QR stickers that help reunite lost items with their owners.
-          Simple, secure, and effective.
+          Dynamic QR stickers that help reunite lost items with their owners.
+          Private, secure, and fast to activate.
         </p>
 
         <div className="auth-feature-list">

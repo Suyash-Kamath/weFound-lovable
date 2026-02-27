@@ -26,15 +26,15 @@ export function CTASection() {
           </h2>
 
           <p className="cta-lead">
-            Join thousands of smart users who protect their belongings with weFound. Get started in minutes, free forever for up to 3 items.
+            Launch a smarter lost-and-found system with dynamic QR stickers and privacy-first recovery flows. Start free and scale as you grow.
           </p>
 
           <div className="cta-actions">
             <Link to="/auth?mode=register" className="btn btn-primary">Create Free Account</Link>
-            <Link to="/pricing" className="btn btn-outline">View Pricing</Link>
+            <Link to="/dashboard" className="btn btn-outline">View Demo Dashboard</Link>
           </div>
 
-          <p className="cta-note">No credit card required • 3 free stickers included • Cancel anytime</p>
+          <p className="cta-note">No credit card required • Dynamic QR stickers included • Cancel anytime</p>
         </motion.div>
       </div>
     </section>
