@@ -4,11 +4,15 @@ import { motion } from "framer-motion";
 import { useAuthStore } from "@/stores/authStore";
 import { useToast } from "@/hooks/use-toast";
 import { QrCode, Mail, Lock, User, ArrowLeft, Loader2, Check } from "lucide-react";
+import { api } from "@/lib/api";
 
 export default function Auth() {
   const [searchParams] = useSearchParams();
   const [isLogin, setIsLogin] = useState(searchParams.get("mode") !== "register");
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState<"auth" | "forgot" | "reset">("auth");
+  const [resetToken, setResetToken] = useState("");
+  const [resetEmail, setResetEmail] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -24,7 +28,15 @@ export default function Auth() {
   }, [isAuthenticated, navigate]);
 
   useEffect(() => {
-    setIsLogin(searchParams.get("mode") !== "register");
+    const modeParam = searchParams.get("mode");
+    setIsLogin(modeParam !== "register");
+    if (modeParam === "reset") {
+      setMode("reset");
+      const tokenParam = searchParams.get("token");
+      const emailParam = searchParams.get("email");
+      if (tokenParam) setResetToken(tokenParam);
+      if (emailParam) setResetEmail(emailParam);
+    }
   }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,7 +44,26 @@ export default function Auth() {
     setLoading(true);
 
     try {
-      if (isLogin) {
+      if (mode === "forgot") {
+        await api.post("/auth/forgot-password", { email: resetEmail || email });
+        toast({
+          title: "Reset email sent",
+          description: "Check your inbox for a reset token.",
+        });
+        setMode("reset");
+      } else if (mode === "reset") {
+        await api.post("/auth/reset-password", {
+          email: resetEmail || email,
+          token: resetToken,
+          password,
+        });
+        toast({
+          title: "Password updated",
+          description: "You can now sign in with your new password.",
+        });
+        setMode("auth");
+        setIsLogin(true);
+      } else if (isLogin) {
         const success = await login(email, password);
         if (success) {
           toast({
@@ -73,9 +104,10 @@ export default function Auth() {
         }
       }
     } catch (error) {
+      const message = error instanceof Error ? error.message : "Something went wrong. Please try again.";
       toast({
         title: "Error",
-        description: "Something went wrong. Please try again.",
+        description: message,
         variant: "destructive",
       });
     } finally {
@@ -140,17 +172,21 @@ export default function Auth() {
               <QrCode size={24} />
             </div>
             <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-              {isLogin ? "Welcome back" : "Create account"}
+              {mode === "forgot" ? "Reset your password" : mode === "reset" ? "Set new password" : isLogin ? "Welcome back" : "Create account"}
             </h2>
             <p style={{ color: 'var(--text-muted)' }}>
-              {isLogin
+              {mode === "forgot"
+                ? "Enter your email and we will send a reset token."
+                : mode === "reset"
+                ? "Enter the reset token from email and a new password."
+                : isLogin
                 ? "Sign in to manage your items"
                 : "Start protecting your valuables today"}
             </p>
           </div>
 
           <form onSubmit={handleSubmit}>
-            {!isLogin && (
+            {!isLogin && mode === "auth" && (
               <div className="form-group">
                 <label className="form-label" htmlFor="name">Full Name</label>
                 <div style={{ position: 'relative' }}>
@@ -177,8 +213,8 @@ export default function Auth() {
                   id="email"
                   type="email"
                   placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={mode === "forgot" || mode === "reset" ? resetEmail : email}
+                  onChange={(e) => (mode === "forgot" || mode === "reset" ? setResetEmail(e.target.value) : setEmail(e.target.value))}
                   className="form-input"
                   style={{ paddingLeft: '2.5rem' }}
                   required
@@ -186,30 +222,53 @@ export default function Auth() {
               </div>
             </div>
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="password">Password</label>
-              <div style={{ position: 'relative' }}>
-                <Lock size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+            {(mode === "auth" || mode === "reset") && (
+              <div className="form-group">
+                <label className="form-label" htmlFor="password">
+                  {mode === "reset" ? "New Password" : "Password"}
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <Lock size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                  <input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="form-input"
+                    style={{ paddingLeft: '2.5rem' }}
+                    required
+                    minLength={6}
+                  />
+                </div>
+              </div>
+            )}
+
+            {mode === "reset" && (
+              <div className="form-group">
+                <label className="form-label" htmlFor="token">Reset Token</label>
                 <input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  id="token"
+                  type="text"
+                  placeholder="Paste reset token"
+                  value={resetToken}
+                  onChange={(e) => setResetToken(e.target.value)}
                   className="form-input"
-                  style={{ paddingLeft: '2.5rem' }}
                   required
-                  minLength={6}
                 />
               </div>
-            </div>
+            )}
 
             <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }} disabled={loading}>
               {loading ? (
                 <>
                   <Loader2 className="animate-spin" size={16} style={{ marginRight: '8px' }} />
-                  {isLogin ? "Signing in..." : "Creating account..."}
+                  {mode === "forgot" ? "Sending..." : mode === "reset" ? "Updating..." : isLogin ? "Signing in..." : "Creating account..."}
                 </>
+              ) : mode === "forgot" ? (
+                "Send Reset Email"
+              ) : mode === "reset" ? (
+                "Update Password"
               ) : isLogin ? (
                 "Sign In"
               ) : (
@@ -218,16 +277,42 @@ export default function Auth() {
             </button>
           </form>
 
-          <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-            {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-            <button
-              type="button"
-              onClick={() => setIsLogin(!isLogin)}
-              style={{ color: 'var(--primary)', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
-            >
-              {isLogin ? "Sign up" : "Sign in"}
-            </button>
-          </div>
+          {mode === "auth" && (
+            <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+              {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+              <button
+                type="button"
+                onClick={() => setIsLogin(!isLogin)}
+                style={{ color: 'var(--primary)', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
+              >
+                {isLogin ? "Sign up" : "Sign in"}
+              </button>
+            </div>
+          )}
+
+          {mode === "auth" && isLogin && (
+            <div style={{ marginTop: '0.75rem', textAlign: 'center' }}>
+              <button
+                type="button"
+                onClick={() => setMode("forgot")}
+                style={{ color: 'var(--primary)', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
+              >
+                Forgot password?
+              </button>
+            </div>
+          )}
+
+          {(mode === "forgot" || mode === "reset") && (
+            <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+              <button
+                type="button"
+                onClick={() => setMode("auth")}
+                style={{ color: 'var(--primary)', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
+              >
+                Back to sign in
+              </button>
+            </div>
+          )}
         </motion.div>
       </div>
     </div>

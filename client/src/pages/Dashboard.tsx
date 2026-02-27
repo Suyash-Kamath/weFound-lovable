@@ -20,7 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function Dashboard() {
   const { user, isAuthenticated } = useAuthStore();
-  const { items, stickers, generateSticker, getScansBySticker } = useItemStore();
+  const { items, stickers, generateSticker, getScansBySticker, refreshItems, refreshStickers, loadScansForSticker } = useItemStore();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [selectedSticker, setSelectedSticker] = useState<Sticker | null>(null);
@@ -31,6 +31,17 @@ export default function Dashboard() {
     }
   }, [isAuthenticated, navigate]);
 
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    refreshItems();
+    refreshStickers();
+  }, [isAuthenticated, refreshItems, refreshStickers]);
+
+  useEffect(() => {
+    if (!stickers.length) return;
+    Promise.all(stickers.map((sticker) => loadScansForSticker(sticker.id))).catch(() => {});
+  }, [stickers.length, loadScansForSticker]);
+
   const userItems = items.filter((item) => item.userId === user?.id);
   const userStickers = stickers.filter((sticker) => sticker.userId === user?.id);
   const totalScans = userStickers.reduce(
@@ -38,13 +49,20 @@ export default function Dashboard() {
     0
   );
 
-  const handleGenerateSticker = () => {
-    if (!user) return;
-    const sticker = generateSticker(user.id);
-    toast({
-      title: "Sticker generated!",
-      description: `Your sticker code is ${sticker.shortCode}`,
-    });
+  const handleGenerateSticker = async () => {
+    try {
+      const sticker = await generateSticker(user?.id || "");
+      toast({
+        title: "Sticker generated!",
+        description: `Your sticker code is ${sticker.shortCode}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Could not generate sticker",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const copyToClipboard = (text: string) => {

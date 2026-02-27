@@ -32,17 +32,17 @@ export default function NewItem() {
     email: user?.email || "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
 
     let finalStickerId = stickerId;
     if (!finalStickerId) {
-      const newSticker = generateSticker(user.id);
+      const newSticker = await generateSticker(user.id);
       finalStickerId = newSticker.id;
     }
 
-    const item = addItem({
+    const item = await addItem({
       name,
       description,
       category,
@@ -54,7 +54,7 @@ export default function NewItem() {
       returnInstructions,
     });
 
-    mapStickerToItem(finalStickerId, item.id);
+    await mapStickerToItem(finalStickerId, item.id);
 
     toast({
       title: "Item created!",

@@ -1,28 +1,66 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { useItemStore } from "@/stores/itemStore";
+import { api } from "@/lib/api";
 import { QrCode, Phone, MessageCircle, Mail, Package, Truck } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function ScanLanding() {
   const { shortCode } = useParams<{ shortCode: string }>();
-  const { getItemBySticker, stickers, recordScan } = useItemStore();
-
-  const sticker = stickers.find((s) => s.shortCode === shortCode);
-  const item = shortCode ? getItemBySticker(shortCode) : undefined;
+  const [sticker, setSticker] = useState<any>(null);
+  const [item, setItem] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    if (sticker) {
-      recordScan(sticker.id, {
-        browser: navigator.userAgent.includes("Chrome") ? "Chrome" : navigator.userAgent.includes("Safari") ? "Safari" : "Other",
-        os: navigator.platform,
-      });
-    }
-  }, [sticker]);
+    let active = true;
+    const load = async () => {
+      if (!shortCode) return;
+      try {
+        setLoading(true);
+        const response = await api.get(`/s/${shortCode}`);
+        if (!active) return;
+        setSticker(response.sticker);
+        setItem(response.item);
+        await api.post("/scans", {
+          shortCode,
+          deviceInfo: {
+            browser: navigator.userAgent.includes("Chrome")
+              ? "Chrome"
+              : navigator.userAgent.includes("Safari")
+              ? "Safari"
+              : "Other",
+            os: navigator.platform,
+          },
+        });
+      } catch (error) {
+        if (!active) return;
+        setNotFound(true);
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+    load();
+    return () => {
+      active = false;
+    };
+  }, [shortCode]);
 
-  if (!sticker || sticker.status !== "active" || !item) {
+  if (loading) {
+    return (
+      <div className="scan-page scan-page-center">
+        <Card className="scan-card scan-card-center">
+          <CardContent className="scan-card-body">
+            <h1 className="scan-title">Loading...</h1>
+            <p className="scan-subtitle">Fetching item details.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (notFound || !sticker || sticker.status !== "active" || !item) {
     return (
       <div className="scan-page scan-page-center">
         <Card className="scan-card scan-card-center">

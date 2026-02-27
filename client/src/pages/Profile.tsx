@@ -14,8 +14,8 @@ export default function Profile() {
     return null;
   }
 
-  const handleSave = () => {
-    updateUser({ name, phone });
+  const handleSave = async () => {
+    await updateUser({ name, phone });
     toast({
       title: "Profile updated",
       description: "Your contact details were saved.",
